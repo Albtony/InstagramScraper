@@ -1,1 +1,0 @@
-profileType: await profileReader.determineVisibility(xpaths.profileType, 'innerHTML')
