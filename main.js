@@ -38,7 +38,7 @@ async function getProfile(driver, username) {
             numberOfPost: await profileReader.getAttribute(xpaths.numberOfPost, 'innerHTML'),
             followerCount: await profileReader.getAttribute(xpaths.followerCount, 'innerHTML'),
             followingCount: await profileReader.getAttribute(xpaths.followingCount, 'innerHTML'),
-            // profileType: await profileReader.determineVisibility(xpaths.profileType, 'innerHTML')
+            profileType: await profileReader.determineVisibility(xpaths.profileType, 'innerHTML')
         }
         console.log("Profile fetched!")
     } else {
