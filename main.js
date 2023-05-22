@@ -4,21 +4,17 @@ const chrome = require("chromedriver");
 
 async function main() {
     let driver = await new Builder().forBrowser('chrome').build()
-    let username = "audisportq89q2"
+    let username = "albtony21"
     let profile = await getProfile(driver, username)
     console.log(`Profile:\n ${profile}`)
     driver.quit()
 }
-
-//*[contains(@id, "mount_0_0_")]/div/div/div[1]/div/div/div/div[1]/div[2]/section/main/div/header
-//*[@id="mount_0_0_rk"]         /div/div/div[1]/div/div/div/div[1]/section/main/div/div/span
 
 async function getProfile(driver, username) {
     const url = `https://www.instagram.com/${username}/`
     const bodyPath = '//*[contains(@id, "mount_0_0_")]/div/div/div[1]/div/div/div/div[1]'
     const profileHeaderPath = `${bodyPath}/div[2]/section/main/div/header`
     const profileBodyPath = `${bodyPath}/div[2]/section/main/div/div[2]/article/div`
-    const profileReader = new ProfileXPathReader(driver, url)
     const xpaths = {
         availability: `${bodyPath}/section/main/div/div/span`,
         profileName: `${profileHeaderPath}/section/div[3]/div/span`,
@@ -28,7 +24,10 @@ async function getProfile(driver, username) {
         followingCount: `${profileHeaderPath}/section/ul/li[3]/button/span/span`,
         profileType: `${profileBodyPath}/div/h2`
     }
+
     let profile = {}
+    const profileReader = new ProfileXPathReader(driver, url)
+    profileReader.initialize()
 
     const isAvailable = await profileReader.determineAvailability(xpaths.availability, 'innerHTML');
     if(isAvailable) {
@@ -57,16 +56,15 @@ class XPathReader {
         this.timeout = this.timeout * 1000
     }
 
-    async __initialize(xpath) {
-        this.content = ""
+    async initialize(xpath) {
         await this.driver.get(this.url)
-        await this.driver.wait(until.elementLocated(By.xpath(xpath), this.timeout))
-        this.element = await this.driver.findElement(By.xpath(xpath))
     }
 
     async getAttribute(xpath, attr) {
         try {
-            await this.__initialize(xpath)
+            this.content = ""
+            await this.driver.wait(until.elementLocated(By.xpath(xpath), this.timeout))
+            this.element = await this.driver.findElement(By.xpath(xpath))
             this.content = await this.element.getAttribute(attr)
         } catch(error) {
             if (error.name === 'TimeoutError') {

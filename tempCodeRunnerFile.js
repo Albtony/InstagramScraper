@@ -1,1 +1,1 @@
-profileType: await profileReader.determineVisibility(xpaths.profileType, 'innerHTML')
+let profile = await getProfile(driver, username)
